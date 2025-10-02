@@ -7,11 +7,8 @@ public class VirtualMachine {
     private final int memorySizeMb;
     private final int pageDirtyRatePps;
     private final int totalPages;
-
-    // The new memory model
     private final int[] memoryContents;
     private final BitSet dirtyPageTracker;
-
     private final Thread workloadThread;
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
     private final AtomicBoolean hasStarted = new AtomicBoolean(false);
@@ -25,22 +22,18 @@ public class VirtualMachine {
         this.pageDirtyRatePps = pageDirtyRatePps;
         int pageSizeKb = 4;
         this.totalPages = (memorySizeMb * 1024) / pageSizeKb;
-
-        // Initialize the new memory model
         this.memoryContents = new int[this.totalPages];
         this.dirtyPageTracker = new BitSet(this.totalPages);
 
         this.workloadThread = new Thread(() -> {
             Random random = new Random();
             while (isRunning.get()) {
-                if (state == State.RUNNING) {
-                    int pagesToDirty = pageDirtyRatePps / 10; // Dirty pages over a 100ms interval
+                // This correctly allows the workload to run during migration
+                if (state == State.RUNNING || state == State.MIGRATING) {
+                    int pagesToDirty = pageDirtyRatePps / 10;
                     for (int i = 0; i < pagesToDirty; i++) {
                         int pageIndex = random.nextInt(totalPages);
-                        // Modify the actual memory content
                         memoryContents[pageIndex] = random.nextInt();
-
-                        // Mark the page as dirty in a thread-safe way
                         synchronized (dirtyPageTracker) {
                             dirtyPageTracker.set(pageIndex);
                         }
@@ -65,11 +58,7 @@ public class VirtualMachine {
         this.isRunning.set(false);
         this.workloadThread.interrupt();
     }
-    
-    /**
-     * Atomically gets a snapshot of the dirty pages and clears the tracker for the next iteration.
-     * @return A BitSet containing the pages that were dirty.
-     */
+
     public BitSet getAndClearDirtyPages() {
         synchronized (dirtyPageTracker) {
             BitSet dirtyPagesSnapshot = (BitSet) dirtyPageTracker.clone();
