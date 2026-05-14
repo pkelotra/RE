@@ -127,7 +127,7 @@ Current behavior:
 - [Implementation/cloud_server.py](Implementation/cloud_server.py) returns `prediction`, `entropy`, and `mode`.
 - [Implementation/edge.py](Implementation/edge.py) forwards tokens to the cloud and prints responses.
 
-## Results
+## Results for Simulation
 Recorded metrics are available in [Simulation/results.json](Simulation/results.json) and [Simulation/results.csv](Simulation/results.csv).
 
 Example results:
