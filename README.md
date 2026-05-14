@@ -11,13 +11,13 @@ Key assets:
 - Demo videos: [Demo_video.mp4](Demo_video.mp4), [NotebookLM_Project_Explanation_video.mp4](NotebookLM_Project_Explanation_video.mp4)
 
 ## Model Architecture
-The CNN is split into an encoder (edge) and decoder (cloud) with a semantic bottleneck:
+The CNN is split into an encoder (edge) and decoder (cloud) :
 
 ```text
 Conv1 -> Pool
 Conv2 -> Pool
 Conv3 -> Pool
-AdaptiveAvgPool1D (Semantic Bottleneck)
+AdaptiveAvgPool1D 
 FC1 -> FC2
 ```
 
@@ -36,9 +36,31 @@ Model definition: [Implementation/model.py](Implementation/model.py) and [Simula
   - Split computing: [Simulation/split_computing/](Simulation/split_computing/)
   - Metrics output: [Simulation/results.json](Simulation/results.json), [Simulation/results.csv](Simulation/results.csv)
 
+## Code Files
+Implementation:
+- [Implementation/cloud_server.py](Implementation/cloud_server.py): Flask API that accepts tokens or raw EEG and returns prediction, entropy, and mode.
+- [Implementation/data_loader.py](Implementation/data_loader.py): Loads Bonn EEG signals into normalized numpy arrays with a channel dimension.
+- [Implementation/edge.py](Implementation/edge.py): Gateway socket server that receives tokens from ESP32 and forwards them to the cloud API.
+- [Implementation/esp32.ino](Implementation/esp32.ino): ESP32 firmware that bridges laptop token stream to the Raspberry Pi over Wi-Fi.
+- [Implementation/metrics_logger.py](Implementation/metrics_logger.py): Creates metrics dictionaries and saves results to JSON/CSV.
+- [Implementation/model.py](Implementation/model.py): CNN model with `encode` (edge) and `decode` (cloud) split.
+- [Implementation/run_all.py](Implementation/run_all.py): Runs cloud, edge, and split experiments and saves metrics (expects `X_test.npy` and `y_test.npy`).
+- [Implementation/sensor.py](Implementation/sensor.py): Laptop-side encoder that streams semantic tokens to the ESP32 over TCP.
+
+Simulation:
+- [Simulation/cloud_only_simulation/cloud_client.py](Simulation/cloud_only_simulation/cloud_client.py): Sends raw EEG to the cloud endpoint and measures bandwidth/latency.
+- [Simulation/cloud_only_simulation/cloud_server_full.py](Simulation/cloud_only_simulation/cloud_server_full.py): Flask server for full-cloud inference on raw EEG.
+- [Simulation/data_loader.py](Simulation/data_loader.py): Loads and normalizes Bonn EEG signals for simulation.
+- [Simulation/edge_only_simulation/edge_local.py](Simulation/edge_only_simulation/edge_local.py): Local edge-only inference baseline.
+- [Simulation/metrics_logger.py](Simulation/metrics_logger.py): Creates metrics dictionaries and saves results to JSON/CSV.
+- [Simulation/model.py](Simulation/model.py): CNN model with the same split architecture as the implementation.
+- [Simulation/run_all.py](Simulation/run_all.py): Convenience runner for the three modes (imports scripts from subfolders).
+- [Simulation/split_computing/cloud_local.py](Simulation/split_computing/cloud_local.py): Local cloud-side inference used for split experiments.
+- [Simulation/split_computing/edge_client.py](Simulation/split_computing/edge_client.py): Split inference client with entropy feedback to switch LOW/HIGH modes.
+
 ## Hardware Requirements
 - Edge/control device: ESP32-WROOM-32
-- Gateway: Raspberry Pi 4 Model B (or similar)
+- Gateway: Raspberry Pi 3 Model B (or similar)
 - Cloud: AWS EC2 (Ubuntu Server 24.04 LTS, t2.micro)
 - Dev machine: Laptop/Desktop with PyTorch
 - Connectivity: USB cable for ESP32, breadboard, optional LEDs/resistors, internet
@@ -103,7 +125,7 @@ Notes:
 
 Current behavior:
 - [Implementation/cloud_server.py](Implementation/cloud_server.py) returns `prediction`, `entropy`, and `mode`.
-- [Implementation/edge.py](Implementation/edge.py) forwards tokens to the cloud and prints responses, but it does not forward `mode` back to the ESP32 or laptop yet.
+- [Implementation/edge.py](Implementation/edge.py) forwards tokens to the cloud and prints responses.
 
 ## Results
 Recorded metrics are available in [Simulation/results.json](Simulation/results.json) and [Simulation/results.csv](Simulation/results.csv).
