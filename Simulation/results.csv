@@ -1,0 +1,4 @@
+Experiment,Accuracy,Precision,Recall,F1_score,Bandwidth_KB,Latency_ms
+Cloud,0.948,0.9512,0.948,0.9449,16003.91,27.34
+Edge,0.948,0.9512,0.948,0.9449,0.49,1.17
+Split,0.948,0.9512,0.948,0.9449,500.0,1.84

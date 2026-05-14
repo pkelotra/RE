@@ -1,0 +1,29 @@
+[
+    {
+        "Experiment": "Cloud",
+        "Accuracy": 0.948,
+        "Precision": 0.9512,
+        "Recall": 0.948,
+        "F1_score": 0.9449,
+        "Bandwidth_KB": 16003.91,
+        "Latency_ms": 27.34
+    },
+    {
+        "Experiment": "Edge",
+        "Accuracy": 0.948,
+        "Precision": 0.9512,
+        "Recall": 0.948,
+        "F1_score": 0.9449,
+        "Bandwidth_KB": 0.49,
+        "Latency_ms": 1.17
+    },
+    {
+        "Experiment": "Split",
+        "Accuracy": 0.948,
+        "Precision": 0.9512,
+        "Recall": 0.948,
+        "F1_score": 0.9449,
+        "Bandwidth_KB": 500.0,
+        "Latency_ms": 1.84
+    }
+]
