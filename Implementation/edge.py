@@ -25,7 +25,7 @@ while True:
 
     buffer += data
 
-    # 🔥 HANDLE MULTIPLE TOKENS PROPERLY
+    # HANDLE MULTIPLE TOKENS PROPERLY
     while b"\n" in buffer:
         line, buffer = buffer.split(b"\n", 1)
 

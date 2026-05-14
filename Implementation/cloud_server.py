@@ -15,7 +15,7 @@ model.eval()
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    print("\n🔥 REQUEST RECEIVED")
+    print("\nREQUEST RECEIVED")
 
     data = request.json
 
@@ -53,10 +53,10 @@ def predict():
 
     pred = torch.argmax(probs, dim=1).item()
 
-    # 🔥 ENTROPY
+    # ENTROPY
     entropy = -torch.sum(probs * torch.log(probs + 1e-8)).item()
 
-    # 🔥 FEEDBACK LOGIC
+    # FEEDBACK LOGIC
     THRESHOLD = 0.5
 
     if entropy > THRESHOLD:

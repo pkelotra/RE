@@ -6,7 +6,7 @@ from model import EEGNet
 
 DEVICE = torch.device("cpu")
 
-# ✅ Single unified cloud endpoint
+# Single unified cloud endpoint
 CLOUD_URL = "http://13.62.228.71:5000/predict"
 
 # Load model
@@ -24,7 +24,7 @@ def run_split():
     total_latency = 0
     total_bandwidth = 0
 
-    mode = "LOW"  # 🔥 start in low power
+    mode = "LOW"  # starting in low power mode
 
     for x in X:
         x_tensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(DEVICE)
@@ -47,16 +47,16 @@ def run_split():
         else:
             payload = {"eeg": x.tolist()}
 
-        # 🔥 BANDWIDTH
+        # BANDWIDTH
         size = len(str(payload).encode("utf-8"))
 
-        # 🔥 SEND REQUEST
+        # SEND REQUEST
         response = requests.post(CLOUD_URL, json=payload)
         res = response.json()
 
         pred = res["prediction"]
 
-        # 🔥 FEEDBACK LOOP
+        # FEEDBACK LOOP
         if "mode" in res:
             mode = res["mode"]
 

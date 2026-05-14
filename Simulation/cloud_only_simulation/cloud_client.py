@@ -5,7 +5,6 @@ from data_loader import load_data
 
 CLOUD_URL = "http://13.62.228.71:5001/predict_raw"
 
-# ⚠️ IMPORTANT: USE SAME TEST DATA
 X = np.load("X_test.npy")
 y = np.load("y_test.npy")
 

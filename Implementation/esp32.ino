@@ -1,10 +1,10 @@
 #include <WiFi.h>
 
-// 🔧 WiFi credentials
+// WiFi credentials
 const char* ssid = "";
 const char* password = "";
 
-// 🔧 Raspberry Pi details
+// Raspberry Pi details
 const char* pi_ip = "";   // 
 const int pi_port = 6000;
 
@@ -59,7 +59,7 @@ void loop() {
         int len = client.read(buffer, sizeof(buffer));
 
         if (len > 0) {
-          // 🔥 Forward EXACT bytes to Pi
+          // Forward EXACT bytes to Pi
           piClient.write(buffer, len);
 
           Serial.print("Forwarded: ");

@@ -52,7 +52,6 @@ for signal in signals:
 
     token = token.squeeze().numpy().tolist()
 
-    # 🔥 ADD DELIMITER HERE
     message = json.dumps(token) + "\n"
     sock.sendall(message.encode())
 
